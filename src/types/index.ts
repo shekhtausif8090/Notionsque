@@ -37,6 +37,7 @@ export interface TasksState {
   items: Task[];
 }
 export interface UiState {
+  viewMode: string;
   sortConfig: SortConfig;
   filterConfig: FilterConfig;
   isTaskModelOpen: boolean;

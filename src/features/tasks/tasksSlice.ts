@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Task } from "../../types";
+import { Task, TaskPriority } from "../../types";
 import { current } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 
@@ -47,6 +47,22 @@ const tasksSlice = createSlice({
         };
       }
     },
+    // Update task priority (used in Kanban view when dragging)
+    updateTaskPriority: (
+      state,
+      action: PayloadAction<{ id: string; priority: TaskPriority }>
+    ) => {
+      const { id, priority } = action.payload;
+      const index = state.items.findIndex((task) => task.id === id);
+
+      if (index !== -1) {
+        state.items[index] = {
+          ...state.items[index],
+          priority,
+          updatedAt: new Date().toISOString(),
+        };
+      }
+    },
     deleteTask: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((task) => task.id !== action.payload);
     },
@@ -57,6 +73,11 @@ const tasksSlice = createSlice({
     },
   },
 });
-export const { createTask, updateTask, deleteTasks, deleteTask } =
-  tasksSlice.actions;
+export const {
+  createTask,
+  updateTask,
+  updateTaskPriority,
+  deleteTasks,
+  deleteTask,
+} = tasksSlice.actions;
 export default tasksSlice.reducer;

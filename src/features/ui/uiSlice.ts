@@ -1,7 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FilterConfig, TaskPriority, TaskStatus, UiState } from "../../types";
+import {
+  FilterConfig,
+  TaskPriority,
+  TaskStatus,
+  UiState,
+  ViewMode,
+} from "../../types";
 
 const initialState: UiState = {
+  viewMode: "list",
   sortConfig: {
     field: "createdAt",
     direction: "desc",
@@ -18,6 +25,10 @@ const uiSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
+    // Toggle between list and kanban views
+    setViewMode: (state, action: PayloadAction<ViewMode>) => {
+      state.viewMode = action.payload;
+    },
     setSortConfig: (state, action) => {
       // If same field is clicked, toggle direction
       if (
@@ -58,6 +69,7 @@ const uiSlice = createSlice({
   },
 });
 export const {
+  setViewMode,
   setSortConfig,
   openTaskModal,
   closeTaskModal,

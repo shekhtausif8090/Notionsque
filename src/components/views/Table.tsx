@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { openTaskModal, setSortConfig } from "../features/ui/uiSlice";
-import { deleteTasks, deleteTask } from "../features/tasks/tasksSlice";
-import { SortDirection, SortField, TaskPriority, TaskStatus } from "../types";
-import { formatDate } from "../utils/util";
-import Pagination from "./Pagination";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { openTaskModal, setSortConfig } from "../../features/ui/uiSlice";
+import { deleteTasks, deleteTask } from "../../features/tasks/tasksSlice";
+import {
+  SortDirection,
+  SortField,
+  TaskPriority,
+  TaskStatus,
+} from "../../types";
+import { formatDate } from "../../utils/util";
+import Pagination from "../Pagination";
 
 const Table = () => {
   const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(

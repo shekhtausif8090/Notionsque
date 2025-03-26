@@ -5,8 +5,9 @@ import {
   setFilterPriority,
   setFilterStatus,
   setSearchTerm,
+  setViewMode,
 } from "../features/ui/uiSlice";
-import { TaskPriority, TaskStatus } from "../types";
+import { TaskPriority, TaskStatus, ViewMode } from "../types";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -29,6 +30,10 @@ const Header = () => {
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     dispatch(setFilterPriority(e.target.value as TaskPriority | "all"));
+  };
+
+  const handleViewModeChange = (mode: ViewMode) => {
+    dispatch(setViewMode(mode));
   };
 
   return (
@@ -62,10 +67,16 @@ const Header = () => {
               Create Task
             </button>
             <div className="flex items-center space-x-2 bg-gray-100 p-1 rounded-lg">
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+              <button
+                onClick={() => handleViewModeChange("list")}
+                className="px-3 py-2 text-sm font-medium text-gray-700 bg-white rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+              >
                 List View
               </button>
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+              <button
+                onClick={() => handleViewModeChange("kanban")}
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+              >
                 Kanban
               </button>
             </div>
