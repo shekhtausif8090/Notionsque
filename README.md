@@ -1,6 +1,6 @@
 # Notionesque
 
-A powerful task management application built with React, Redux, TypeScript, and Tailwind CSS. This application provides a comprehensive set of features for managing tasks with advanced capabilities similar to a simplified Notion database.
+A powerful task management application built with React, Redux, TypeScript, and Tailwind CSS. This application provides a comprehensive set of features for managing tasks with advanced capabilities similar to a simplified Notion.
 
 ## Features
 
@@ -31,14 +31,12 @@ A powerful task management application built with React, Redux, TypeScript, and 
 ### Data Persistence
 
 * Automatic local storage saving
-* Undo/redo functionality for all actions
-
+* 
 ## Tech Stack
 
 * **React**: UI library for building the interface
 * **TypeScript**: Static typing for better development experience
 * **Redux Toolkit**: State management with advanced features
-* **Redux-Undo**: Undo/redo capabilities
 * **Redux-Persist**: Local storage persistence
 * **@hello-pangea/dnd**: Drag-and-drop functionality
 * **Tailwind CSS**: Utility-first CSS framework
@@ -77,43 +75,6 @@ yarn dev
 
 4. Open your browser to http://localhost:5173
 
-## Usage Guide
-
-### Creating Tasks
-
-1. Click the "Create Task" button in the header
-2. Fill in the task details:
-   * Title (required)
-   * Description (optional)
-   * Status (Not Started, In Progress, Completed)
-   * Priority (None, Low, Medium, High, Urgent)
-   * Custom Fields (optional)
-3. Click "Create" to add the task
-
-### Managing Tasks
-
-<!-- * **View Task Details**: Click on a task's title to view all details -->
-* **Edit a Task**: Click the "Edit" button on a task card or in the detail view
-* **Delete a Task**: Click the "Delete" button on a task card or in the detail view
-* **Bulk Actions**: Select multiple tasks in list view to perform actions on them
-
-### Using Views
-
-* Toggle between List and Kanban views using the buttons in the header
-* **List View**: Sort by clicking column headers, paginate with controls at the bottom
-* **Kanban View**: Drag tasks between priority columns to change their priority
-
-### Filtering and Searching
-
-* Use the search box to find tasks by title
-* Use the Status and Priority dropdowns to filter tasks
-* Filters work in both List and Kanban views
-
-### Undo/Redo
-
-* Use the undo and redo buttons in the header to revert or restore changes
-* All actions (create, edit, delete, priority changes) can be undone
-
 ## Project Structure
 
 ```
@@ -132,20 +93,5 @@ src/
 ├── App.tsx                 # Main App component
 └── main.tsx                # Entry point
 ```
-
-## Customization
-
-### Adding New Task Statuses
-
-1. Update the TaskStatus type in src/types/index.ts
-2. Add the new status to the dropdown in TaskModal.tsx
-3. Add styling for the new status in the list and kanban views
-
-### Adding New Priority Levels
-
-1. Update the TaskPriority type in src/types/index.ts
-2. Add the new priority to the dropdown in TaskModal.tsx
-3. Add a new column in the KanbanView.tsx for the new priority level
-4. Add styling for the new priority in both views
 
 
