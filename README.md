@@ -53,8 +53,7 @@ A powerful task management application built with React, Redux, TypeScript, and 
 1. Clone the repository
 
 ```bash
-git clone https://github.com/johnobriendev/notionesque.git
-cd notionesque
+git clone https://github.com/shekhtausif8090/Notionsque
 ```
 
 2. Install dependencies
