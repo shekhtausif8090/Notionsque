@@ -8,7 +8,6 @@ import {
   openBulkEdit,
   selectIsDeleteConfirmOpen,
 } from "../../features/ui/uiSlice";
-import { deleteTask, deleteTasks } from "../../features/tasks/tasksSlice";
 import {
   Task,
   SortField,

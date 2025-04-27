@@ -13,7 +13,6 @@ import {
 } from "../../features/ui/uiSlice";
 import {
   updateTaskPriority,
-  deleteTask,
   reorderTasks,
   addTask,
 } from "../../features/tasks/tasksSlice";
