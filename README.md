@@ -1,54 +1,96 @@
-# React + TypeScript + Vite
+# Notionesque
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A powerful task management application built with React, Redux, TypeScript, and Tailwind CSS. This application provides a comprehensive set of features for managing tasks with advanced capabilities similar to a simplified Notion.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Multiple View Modes
 
-## Expanding the ESLint configuration
+* **List View**: Table format with sorting and pagination
+* **Kanban View**: Drag-and-drop interface organized by priority
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Rich Task Management
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+* Create, edit, and delete tasks
+* Set title, description, status, and priority
+* Add custom fields for extended information
+* View detailed task information
+
+### Advanced Filtering & Sorting
+
+* Filter by status and priority
+* Search by task name
+* Sort by any column in list view
+
+### User-Friendly Interface
+
+* Drag and drop tasks between priority columns
+* Bulk selection and actions
+* Responsive design for all screen sizes
+
+### Data Persistence
+
+* Automatic local storage saving
+* 
+## Tech Stack
+
+* **React**: UI library for building the interface
+* **TypeScript**: Static typing for better development experience
+* **Redux Toolkit**: State management with advanced features
+* **Redux-Persist**: Local storage persistence
+* **@hello-pangea/dnd**: Drag-and-drop functionality
+* **Tailwind CSS**: Utility-first CSS framework
+
+## Getting Started
+
+### Prerequisites
+
+* Node.js (v14 or newer)
+* npm or yarn
+
+### Installation
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/shekhtausif8090/Notionsque
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
+# or
+yarn
 ```
+
+3. Start the development server
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+4. Open your browser to http://localhost:5173
+
+## Project Structure
+
+```
+src/
+├── app/                    # Redux store setup and app hooks
+├── components/             # UI components
+│   ├── common/             # Reusable components
+│   ├── layout/             # Layout components (Header)
+│   ├── modals/             # Modal components (TaskModal)
+│   ├── task/               # Task-related components (TaskDetailView)
+│   └── views/              # Main views (ListView, KanbanView)
+├── features/               # Redux Toolkit feature slices
+│   ├── tasks/              # Tasks slice (CRUD operations)
+│   └── ui/                 # UI state slice (view mode, filters, etc.)
+├── types/                  # TypeScript type definitions
+├── App.tsx                 # Main App component
+└── main.tsx                # Entry point
+```
+
+
