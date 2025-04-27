@@ -14,7 +14,6 @@ const Pagination = ({
   if (totalPages <= 1) return null;
   return (
     <div className="px-4 py-3 flex items-center justify-between border-t border-gray-200">
-      {/* Mobile pagination */}
       <div className="flex-1 flex justify-between sm:hidden">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -43,7 +42,6 @@ const Pagination = ({
         </button>
       </div>
 
-      {/* Desktop pagination */}
       <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
@@ -52,7 +50,6 @@ const Pagination = ({
         </div>
         <div>
           <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-            {/* First page */}
             <button
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
@@ -61,7 +58,6 @@ const Pagination = ({
               First
             </button>
 
-            {/* Previous */}
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
@@ -70,11 +66,9 @@ const Pagination = ({
               Prev
             </button>
 
-            {/* Page numbers */}
             {[...Array(Math.min(5, totalPages))].map((_, index) => {
               let pageNum = index + 1;
 
-              // Adjust page numbers to center around current page
               if (totalPages > 5) {
                 if (currentPage > 3 && currentPage < totalPages - 2) {
                   pageNum = currentPage - 2 + index;
@@ -99,7 +93,6 @@ const Pagination = ({
               );
             })}
 
-            {/* Next */}
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
@@ -108,7 +101,6 @@ const Pagination = ({
               Next
             </button>
 
-            {/* Last page */}
             <button
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}

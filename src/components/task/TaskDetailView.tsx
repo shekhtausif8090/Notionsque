@@ -12,23 +12,19 @@ interface TaskDetailViewProps {
 const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
   const dispatch = useAppDispatch();
 
-  // Format date for display
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
   };
 
-  // Handle edit task
   const handleEdit = () => {
     dispatch(openTaskModal(task.id));
-    onClose(); // Close the detail view
+    onClose();
   };
 
-  // Handle delete task
   const handleDelete = () => {
     dispatch(openDeleteConfirm(task.id));
   };
 
-  // Get status badge class
   const getStatusBadgeClass = (status: TaskStatus) => {
     switch (status) {
       case "completed":
@@ -40,7 +36,6 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
     }
   };
 
-  // Get priority badge class
   const getPriorityBadgeClass = (priority: TaskPriority) => {
     switch (priority) {
       case "urgent":
@@ -60,14 +55,12 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       onClick={(e) => {
-        // Only close if the click is on the backdrop, not on the modal itself
         if (e.target === e.currentTarget) {
           onClose();
         }
       }}
     >
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="px-6 py-4 border-b flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-800">Task Details</h2>
           <button
@@ -92,7 +85,6 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
           </button>
         </div>
 
-        {/* Content */}
         <div className="px-6 py-4">
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -127,7 +119,6 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
             </div>
           </div>
 
-          {/* Description */}
           {task.description && (
             <div className="mb-6">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -139,7 +130,6 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
             </div>
           )}
 
-          {/* Custom Fields */}
           {Object.keys(task.customFields).length > 0 && (
             <div className="mb-6">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -159,7 +149,6 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
           )}
         </div>
 
-        {/* Footer with actions */}
         <div className="px-6 py-4 border-t bg-gray-50 flex justify-end space-x-3">
           <button
             onClick={handleDelete}

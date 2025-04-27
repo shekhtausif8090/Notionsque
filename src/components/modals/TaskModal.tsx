@@ -1,4 +1,3 @@
-//src/components/modals/TaskModal.tsx
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { closeTaskModal } from "../../features/ui/uiSlice";
@@ -11,28 +10,23 @@ const TaskModal: React.FC = () => {
   const editingTaskId = useAppSelector((state) => state.ui.editingTaskId);
   const tasks = useAppSelector((state) => state.tasks.items as Task[]);
 
-  // Find the task being edited, if any
   const taskToEdit = editingTaskId
     ? tasks.find((task) => task.id === editingTaskId)
     : null;
 
-  // Form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<TaskStatus>("not started");
   const [priority, setPriority] = useState<TaskPriority>("none");
   const [customFields, setCustomFields] = useState<Record<string, string>>({});
 
-  // For adding custom fields
   const [showCustomFields, setShowCustomFields] = useState(false);
   const [newFieldName, setNewFieldName] = useState("");
   const [newFieldValue, setNewFieldValue] = useState("");
 
-  // Reset form when modal opens/closes or editingTaskId changes
   useEffect(() => {
     if (isOpen) {
       if (taskToEdit) {
-        // Editing existing task - populate form
         setTitle(taskToEdit.title);
         setDescription(taskToEdit.description);
         setStatus(taskToEdit.status);
@@ -40,7 +34,6 @@ const TaskModal: React.FC = () => {
         setCustomFields(taskToEdit.customFields as Record<string, string>);
         setShowCustomFields(Object.keys(taskToEdit.customFields).length > 0);
       } else {
-        // Creating new task - reset form
         setTitle("");
         setDescription("");
         setStatus("not started");
@@ -51,19 +44,16 @@ const TaskModal: React.FC = () => {
     }
   }, [isOpen, taskToEdit]);
 
-  // Close the modal
   const handleClose = () => {
     dispatch(closeTaskModal());
   };
 
-  // Submit the form
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title.trim()) return; // Validate title
+    if (!title.trim()) return;
 
     if (taskToEdit) {
-      // Update existing task
       dispatch(
         updateTask({
           id: taskToEdit.id,
@@ -77,7 +67,6 @@ const TaskModal: React.FC = () => {
         })
       );
     } else {
-      // Create new task
       dispatch(
         addTask({
           title,
@@ -89,11 +78,9 @@ const TaskModal: React.FC = () => {
       );
     }
 
-    // Close the modal
     handleClose();
   };
 
-  // Add a custom field
   const handleAddCustomField = () => {
     if (newFieldName.trim() && newFieldValue.trim()) {
       setCustomFields((prev) => ({
@@ -105,7 +92,6 @@ const TaskModal: React.FC = () => {
     }
   };
 
-  // Remove a custom field
   const handleRemoveCustomField = (fieldName: string) => {
     setCustomFields((prev) => {
       const updated = { ...prev };
@@ -114,19 +100,16 @@ const TaskModal: React.FC = () => {
     });
   };
 
-  // Toggle custom fields visibility
   const toggleCustomFields = () => {
     setShowCustomFields(!showCustomFields);
   };
 
-  // If modal is closed, don't render anything
   if (!isOpen) return null;
 
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       onClick={(e) => {
-        // Only close if the click is on the backdrop, not on the modal itself
         if (e.target === e.currentTarget) {
           dispatch(closeTaskModal());
         }
@@ -138,7 +121,6 @@ const TaskModal: React.FC = () => {
         </h2>
 
         <form onSubmit={handleSubmit}>
-          {/* Task Title */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Title *
@@ -152,7 +134,6 @@ const TaskModal: React.FC = () => {
             />
           </div>
 
-          {/* Task Description */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Description
@@ -165,7 +146,6 @@ const TaskModal: React.FC = () => {
             />
           </div>
 
-          {/* Status and Priority */}
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -200,7 +180,6 @@ const TaskModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Custom Fields Collapsible Section */}
           <div className="mb-4 border rounded-md overflow-hidden">
             <button
               type="button"
@@ -228,10 +207,8 @@ const TaskModal: React.FC = () => {
               </svg>
             </button>
 
-            {/* Collapsible content */}
             {showCustomFields && (
               <div className="p-4 border-t">
-                {/* List existing custom fields */}
                 {Object.entries(customFields).length > 0 && (
                   <div className="mb-4 bg-gray-50 rounded-md p-3">
                     {Object.entries(customFields).map(([name, value]) => (
@@ -259,7 +236,6 @@ const TaskModal: React.FC = () => {
                   </div>
                 )}
 
-                {/* Add new custom field - using vertical layout for more space */}
                 <div className="mt-3">
                   <div className="flex flex-col space-y-2">
                     <div className="w-full">
@@ -304,7 +280,6 @@ const TaskModal: React.FC = () => {
             )}
           </div>
 
-          {/* Form Actions */}
           <div className="flex justify-end space-x-3 mt-6">
             <button
               type="button"
