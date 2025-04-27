@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   ViewMode,
-  SortField,
-  SortDirection,
   SortConfig,
   FilterConfig,
   TaskStatus,

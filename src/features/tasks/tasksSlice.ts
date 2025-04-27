@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import { Task, TaskStatus, TaskPriority } from "../../types";
+import { Task, TaskPriority } from "../../types";
 
 interface TasksState {
   items: Task[];

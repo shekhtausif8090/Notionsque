@@ -1,7 +1,6 @@
 import React from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { openDeleteConfirm, openTaskModal } from "../../features/ui/uiSlice";
-import { deleteTask } from "../../features/tasks/tasksSlice";
 import { Task, TaskStatus, TaskPriority } from "../../types";
 
 interface TaskDetailViewProps {
