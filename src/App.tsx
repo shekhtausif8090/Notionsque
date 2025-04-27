@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "./app/hooks";
 import Header from "./components/layout/Header";
 import ListView from "./components/views/ListView";

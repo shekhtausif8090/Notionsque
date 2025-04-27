@@ -204,7 +204,7 @@ export const tasksSlice = createSlice({
     },
 
     reorderTasks: (state, action: PayloadAction<ReorderTasksPayload>) => {
-      const { priority, taskIds } = action.payload;
+      const { taskIds } = action.payload;
 
       taskIds.forEach((taskId, index) => {
         const taskIndex = state.items.findIndex((task) => task.id === taskId);
