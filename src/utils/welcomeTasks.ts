@@ -1,9 +1,5 @@
 import { TaskPriority, TaskStatus } from "../types";
 
-/**
- * Returns a set of welcome tasks for new users
- * @returns Array of sample tasks with required fields for addTask action
- */
 export const getWelcomeTasks = () => {
   return [
     {

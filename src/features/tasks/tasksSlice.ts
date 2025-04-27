@@ -1,37 +1,30 @@
-//src/features/tasks/tasksSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { Task, TaskStatus, TaskPriority } from "../../types";
 
-// Define the state structure for the tasks slice
 interface TasksState {
-  items: Task[]; // Array of all tasks
+  items: Task[];
 }
 
-// Initial state when the application loads
 const initialState: TasksState = {
   items: [],
 };
 
-// Define payload types
 interface ReorderTasksPayload {
   priority: TaskPriority;
   taskIds: string[];
 }
 
-// Enhanced payload for updateTaskPriority
 interface UpdateTaskPriorityPayload {
   id: string;
   priority: TaskPriority;
-  destinationIndex?: number; // Optional parameter for destination position
+  destinationIndex?: number;
 }
 
-// Create the slice with reducers
 export const tasksSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    // Add a new task
     addTask: (
       state,
       action: PayloadAction<
@@ -40,13 +33,11 @@ export const tasksSlice = createSlice({
     ) => {
       const now = new Date().toISOString();
 
-      // Calculate the next position for the new task based on its priority
       const tasksWithSamePriority = state.items.filter(
         (task) => task.priority === action.payload.priority
       );
       console.log(...tasksWithSamePriority.map((t) => t.position || 0));
 
-      // If no tasks with this priority, start at position 0, otherwise take the max position + 1
       const position = tasksWithSamePriority.length
         ? Math.max(...tasksWithSamePriority.map((t) => t.position || 0)) + 1
         : 0;
@@ -54,7 +45,7 @@ export const tasksSlice = createSlice({
       const newTask: Task = {
         ...action.payload,
         id: uuidv4(),
-        position, // Set the position field
+        position,
         createdAt: now,
         updatedAt: now,
       };
@@ -62,7 +53,6 @@ export const tasksSlice = createSlice({
       state.items.push(newTask);
     },
 
-    // Update an existing task
     updateTask: (
       state,
       action: PayloadAction<{
@@ -77,9 +67,7 @@ export const tasksSlice = createSlice({
         const oldPriority = state.items[index].priority;
         const newPriority = updates.priority;
 
-        // If priority changed, handle position updates
         if (newPriority && newPriority !== oldPriority) {
-          // Get the highest position in the new priority group
           const tasksInNewPriority = state.items.filter(
             (t) => t.priority === newPriority
           );
@@ -98,19 +86,16 @@ export const tasksSlice = createSlice({
       }
     },
 
-    // Delete a single task
     deleteTask: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((task) => task.id !== action.payload);
     },
 
-    // Delete multiple tasks (for bulk actions)
     deleteTasks: (state, action: PayloadAction<string[]>) => {
       state.items = state.items.filter(
         (task) => !action.payload.includes(task.id)
       );
     },
 
-    // Enhanced: Update task priority with optional destination index
     updateTaskPriority: (
       state,
       action: PayloadAction<UpdateTaskPriorityPayload>
@@ -121,11 +106,9 @@ export const tasksSlice = createSlice({
       if (index !== -1) {
         const oldPriority = state.items[index].priority;
 
-        // Only proceed if priority actually changed
         if (oldPriority !== priority) {
           let newPosition;
 
-          // Get all tasks in the destination priority column
           const tasksInDestPriority = state.items.filter(
             (t) => t.priority === priority
           );
@@ -134,23 +117,19 @@ export const tasksSlice = createSlice({
             destinationIndex !== undefined &&
             tasksInDestPriority.length > 0
           ) {
-            // Sort tasks by position
             const sortedTasks = [...tasksInDestPriority].sort(
               (a, b) => (a.position || 0) - (b.position || 0)
             );
 
             if (destinationIndex >= sortedTasks.length) {
-              // If dropped at the end, set position after the last task
               const maxPosition = Math.max(
                 ...sortedTasks.map((t) => t.position || 0)
               );
               newPosition = maxPosition + 1;
             } else {
-              // If dropped in the middle, get the position at the drop point
               const positionAtDrop =
                 sortedTasks[destinationIndex].position || 0;
 
-              // Increment positions of all tasks at or after the drop point
               state.items.forEach((task) => {
                 if (
                   task.priority === priority &&
@@ -161,17 +140,14 @@ export const tasksSlice = createSlice({
                 }
               });
 
-              // Set the moved task to the position at the drop point
               newPosition = positionAtDrop;
             }
           } else {
-            // Default: place at the end
             newPosition = tasksInDestPriority.length
               ? Math.max(...tasksInDestPriority.map((t) => t.position || 0)) + 1
               : 0;
           }
 
-          // Update the task with new priority and position
           state.items[index] = {
             ...state.items[index],
             priority,
@@ -191,9 +167,7 @@ export const tasksSlice = createSlice({
     ) => {
       const { taskIds, updates } = action.payload;
 
-      // If priority is changing, we need to handle positions
       if (updates.priority) {
-        // Get all tasks in the destination priority
         const tasksInDestPriority = state.items.filter(
           (t) => t.priority === updates.priority
         );
@@ -201,10 +175,8 @@ export const tasksSlice = createSlice({
           ? Math.max(...tasksInDestPriority.map((t) => t.position || 0)) + 1
           : 0;
 
-        // Update each task one by one to maintain proper positions
         state.items = state.items.map((task) => {
           if (taskIds.includes(task.id)) {
-            // If priority is changing, assign a new position
             const needsNewPosition =
               updates.priority && task.priority !== updates.priority;
 
@@ -218,7 +190,6 @@ export const tasksSlice = createSlice({
           return task;
         });
       } else {
-        // No priority change, simpler update
         state.items = state.items.map((task) => {
           if (taskIds.includes(task.id)) {
             return {
@@ -235,7 +206,6 @@ export const tasksSlice = createSlice({
     reorderTasks: (state, action: PayloadAction<ReorderTasksPayload>) => {
       const { priority, taskIds } = action.payload;
 
-      // Update positions based on the new order
       taskIds.forEach((taskId, index) => {
         const taskIndex = state.items.findIndex((task) => task.id === taskId);
         if (taskIndex !== -1) {
@@ -260,8 +230,6 @@ export const {
   bulkUpdateTasks,
 } = tasksSlice.actions;
 
-// Export the reducer
 export default tasksSlice.reducer;
 
-// Selector to get all tasks
 export const selectAllTasks = (state: any) => state.tasks.present.items;

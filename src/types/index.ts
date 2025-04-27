@@ -1,5 +1,3 @@
-//src/types/index.ts
-
 export type TaskStatus = "not started" | "in progress" | "completed";
 
 export type TaskPriority = "none" | "low" | "medium" | "high" | "urgent";
@@ -38,19 +36,16 @@ export interface FilterConfig {
   searchTerm: string;
 }
 
-// Structure for task state with redux-undo
 export interface TasksState {
   items: Task[];
 }
 
-// Structure for the history state (from redux-undo)
 export interface StateWithHistory<T> {
   past: T[];
   present: T;
   future: T[];
 }
 
-// UI state structure
 export interface UiState {
   viewMode: ViewMode;
   sortConfig: SortConfig;
@@ -67,7 +62,6 @@ export interface UiState {
   selectedTaskIds: string[];
 }
 
-// Complete app state structure
 export interface RootState {
   tasks: TasksState;
   ui: UiState;

@@ -1,4 +1,3 @@
-//src/components/views/ListView.tsx
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
@@ -25,21 +24,16 @@ const ListView: React.FC = () => {
   const sortConfig = useAppSelector((state) => state.ui.sortConfig);
   const isDeleteConfirmOpen = useAppSelector(selectIsDeleteConfirmOpen);
 
-  // State for selected tasks (for bulk actions)
   const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(
     new Set()
   );
 
-  // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const tasksPerPage = 10;
 
-  // Reset selections when tasks change (due to deletion, etc.)
   useEffect(() => {
-    // Create a set of existing task IDs
     const taskIdsSet = new Set(tasks.map((task) => task.id));
 
-    // Keep only the selections that still exist in tasks
     const updatedSelections = new Set<string>();
     selectedTaskIds.forEach((id) => {
       if (taskIdsSet.has(id)) {
@@ -50,18 +44,13 @@ const ListView: React.FC = () => {
     setSelectedTaskIds(updatedSelections);
   }, [tasks]);
 
-  // Clear selected tasks when delete confirm modal closes
   useEffect(() => {
     if (!isDeleteConfirmOpen) {
-      // setSelectedTaskIds(new Set());
     }
   }, [isDeleteConfirmOpen]);
 
-  // Filter and sort tasks based on current configuration
   const filteredAndSortedTasks = React.useMemo(() => {
-    // First, filter the tasks
     let result = tasks.filter((task) => {
-      // Filter by status
       if (
         filterConfig.status !== "all" &&
         task.status !== filterConfig.status
@@ -69,7 +58,6 @@ const ListView: React.FC = () => {
         return false;
       }
 
-      // Filter by priority
       if (
         filterConfig.priority !== "all" &&
         task.priority !== filterConfig.priority
@@ -77,7 +65,6 @@ const ListView: React.FC = () => {
         return false;
       }
 
-      // Filter by search term
       if (
         filterConfig.searchTerm &&
         !task.title
@@ -90,12 +77,10 @@ const ListView: React.FC = () => {
       return true;
     });
 
-    // Then, sort the filtered tasks
     result.sort((a, b) => {
       const { field, direction } = sortConfig;
       const multiplier = direction === "asc" ? 1 : -1;
 
-      // Handle date fields
       if (field === "createdAt" || field === "updatedAt") {
         return (
           multiplier *
@@ -103,7 +88,6 @@ const ListView: React.FC = () => {
         );
       }
 
-      // Handle string fields
       if (typeof a[field] === "string" && typeof b[field] === "string") {
         return multiplier * a[field].localeCompare(b[field] as string);
       }
@@ -115,61 +99,45 @@ const ListView: React.FC = () => {
   }, [tasks, filterConfig, sortConfig]);
 
   useEffect(() => {
-    // Reset to page 1 when filters change
     setCurrentPage(1);
   }, [filterConfig]);
 
-  // Get paginated tasks
   const paginatedTasks = React.useMemo(() => {
     const startIndex = (currentPage - 1) * tasksPerPage;
     return filteredAndSortedTasks.slice(startIndex, startIndex + tasksPerPage);
   }, [filteredAndSortedTasks, currentPage, tasksPerPage]);
 
-  // Calculate total pages
   const totalPages = Math.ceil(filteredAndSortedTasks.length / tasksPerPage);
 
-  // Handle sorting
   const handleSort = (field: SortField) => {
     if (sortConfig.field === field) {
-      // Toggle direction if same field
       const newDirection: SortDirection =
         sortConfig.direction === "asc" ? "desc" : "asc";
       dispatch(setSortConfig({ field, direction: newDirection }));
     } else {
-      // Set new field with default descending
       dispatch(setSortConfig({ field, direction: "desc" }));
     }
   };
 
-  // Get sort direction indicator
   const getSortIndicator = (field: SortField) => {
     if (sortConfig.field !== field) return null;
     return sortConfig.direction === "asc" ? "↑" : "↓";
   };
 
-  // Handle edit task
   const handleEditTask = (task: Task) => {
     dispatch(openTaskModal(task.id));
   };
 
-  // Handle delete task
   const handleDeleteTask = (id: string) => {
     dispatch(openDeleteConfirm(id));
   };
 
-  // Handle bulk delete
   const handleBulkDelete = () => {
     if (selectedTaskIds.size === 0) return;
 
     dispatch(openDeleteConfirm(Array.from(selectedTaskIds)));
-
-    // if (window.confirm(`Are you sure you want to delete ${selectedTaskIds.size} tasks?`)) {
-    //   dispatch(deleteTasks(Array.from(selectedTaskIds)));
-    //   setSelectedTaskIds(new Set());
-    // }
   };
 
-  // Toggle task selection
   const toggleTaskSelection = (id: string) => {
     const newSelection = new Set(selectedTaskIds);
     if (newSelection.has(id)) {
@@ -180,20 +148,16 @@ const ListView: React.FC = () => {
     setSelectedTaskIds(newSelection);
   };
 
-  // Toggle all selection
   const toggleSelectAll = () => {
     if (selectedTaskIds.size === paginatedTasks.length) {
-      // Deselect all
       setSelectedTaskIds(new Set());
     } else {
-      // Select all
       const newSelection = new Set<string>();
       paginatedTasks.forEach((task) => newSelection.add(task.id));
       setSelectedTaskIds(newSelection);
     }
   };
 
-  // Style classes for status badges
   const getStatusBadgeClass = (status: TaskStatus) => {
     switch (status) {
       case "completed":
@@ -205,7 +169,6 @@ const ListView: React.FC = () => {
     }
   };
 
-  // Style classes for priority badges
   const getPriorityBadgeClass = (priority: TaskPriority) => {
     switch (priority) {
       case "urgent":
@@ -221,19 +184,16 @@ const ListView: React.FC = () => {
     }
   };
 
-  // Pagination navigation
   const handlePageChange = (page: number) => {
     setCurrentPage(Math.max(1, Math.min(page, totalPages)));
   };
 
-  // Format date for display
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
   };
 
   return (
     <div className="bg-white shadow rounded-lg overflow-hidden">
-      {/* Bulk actions bar */}
       {selectedTaskIds.size > 0 && (
         <div className="bg-blue-50 px-4 py-2 flex items-center justify-between border-b">
           <span className="text-sm text-blue-700 font-medium">
@@ -267,7 +227,6 @@ const ListView: React.FC = () => {
             >
               Change Priority
             </button>
-            {/* Existing delete button */}
             <button
               onClick={handleBulkDelete}
               className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
@@ -278,7 +237,6 @@ const ListView: React.FC = () => {
         </div>
       )}
 
-      {/* Task table */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -399,11 +357,9 @@ const ListView: React.FC = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
           <div className="flex-1 flex justify-between sm:hidden">
-            {/* Mobile pagination */}
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
@@ -431,7 +387,6 @@ const ListView: React.FC = () => {
             </button>
           </div>
 
-          {/* Desktop pagination */}
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
@@ -481,9 +436,7 @@ const ListView: React.FC = () => {
                   Prev
                 </button>
 
-                {/* Page numbers - show current page and adjacent pages */}
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  // Center around current page
                   let pageNum;
                   if (totalPages <= 5) {
                     pageNum = i + 1;
