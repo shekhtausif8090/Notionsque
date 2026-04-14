@@ -23,7 +23,7 @@ import { getStatusBadgeClass } from "../../lib/utils";
 
 const KanbanView: React.FC = () => {
   const dispatch = useAppDispatch();
-  const tasks = useAppSelector((state) => state.tasks.items as Task[]);
+  const tasks = useAppSelector((state) => state.tasks.items);
   const filterConfig = useAppSelector((state) => state.ui.filterConfig);
 
   const [newTaskInputs, setNewTaskInputs] = useState<

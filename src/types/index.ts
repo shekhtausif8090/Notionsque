@@ -14,8 +14,6 @@ export interface Task {
   customFields: Record<string, string | number | boolean>;
 }
 
-export type ViewMode = "list" | "kanban";
-
 export type SortField =
   | "title"
   | "status"
@@ -40,12 +38,6 @@ export interface TasksState {
   items: Task[];
 }
 
-export interface StateWithHistory<T> {
-  past: T[];
-  present: T;
-  future: T[];
-}
-
 export interface UiState {
   sortConfig: SortConfig;
   filterConfig: FilterConfig;
@@ -59,9 +51,4 @@ export interface UiState {
   isBulkEditOpen: boolean;
   bulkEditType: "status" | "priority" | null;
   selectedTaskIds: string[];
-}
-
-export interface RootState {
-  tasks: TasksState;
-  ui: UiState;
 }

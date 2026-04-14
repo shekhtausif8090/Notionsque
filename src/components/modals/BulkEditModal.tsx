@@ -1,7 +1,7 @@
 "use client";
 
 // src/components/modals/BulkEditModal.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { closeBulkEdit } from "../../features/ui/uiSlice";
 import { bulkUpdateTasks } from "../../features/tasks/tasksSlice";
@@ -15,12 +15,23 @@ const BulkEditModal: React.FC = () => {
 
   const [status, setStatus] = useState<TaskStatus>("not started");
   const [priority, setPriority] = useState<TaskPriority>("none");
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  const handleClose = useCallback(() => {
+    dispatch(closeBulkEdit());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, handleClose]);
 
   if (!isOpen || !editType || selectedTaskIds.length === 0) return null;
-
-  const handleClose = () => {
-    dispatch(closeBulkEdit());
-  };
 
   const handleApply = () => {
     const updates = editType === "status" ? { status } : { priority };
@@ -39,13 +50,21 @@ const BulkEditModal: React.FC = () => {
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          handleClose();
-        }
+        if (e.target === e.currentTarget) handleClose();
       }}
     >
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4 text-gray-900">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="bulk-edit-title"
+        tabIndex={-1}
+        className="bg-white rounded-lg p-6 w-full max-w-md focus:outline-none"
+      >
+        <h2
+          id="bulk-edit-title"
+          className="text-xl font-bold mb-4 text-gray-900"
+        >
           Bulk Edit {editType === "status" ? "Status" : "Priority"}
         </h2>
 

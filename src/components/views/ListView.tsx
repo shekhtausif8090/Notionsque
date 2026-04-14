@@ -19,7 +19,7 @@ import {
 
 const ListView: React.FC = () => {
   const dispatch = useAppDispatch();
-  const tasks = useAppSelector((state) => state.tasks.items as Task[]);
+  const tasks = useAppSelector((state) => state.tasks.items);
   const filterConfig = useAppSelector((state) => state.ui.filterConfig);
   const sortConfig = useAppSelector((state) => state.ui.sortConfig);
   const isDeleteConfirmOpen = useAppSelector(selectIsDeleteConfirmOpen);

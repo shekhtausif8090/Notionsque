@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { closeTaskModal } from "../../features/ui/uiSlice";
 import { addTask, updateTask } from "../../features/tasks/tasksSlice";
-import { Task, TaskStatus, TaskPriority } from "../../types";
+import { TaskStatus, TaskPriority } from "../../types";
 
 const TaskModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state) => state.ui.isTaskModalOpen);
   const editingTaskId = useAppSelector((state) => state.ui.editingTaskId);
-  const tasks = useAppSelector((state) => state.tasks.items as Task[]);
+  const tasks = useAppSelector((state) => state.tasks.items);
 
   const taskToEdit = editingTaskId
     ? tasks.find((task) => task.id === editingTaskId)
@@ -46,9 +46,26 @@ const TaskModal: React.FC = () => {
     }
   }, [isOpen, taskToEdit]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     dispatch(closeTaskModal());
-  };
+  }, [dispatch]);
+
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  const handleEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    },
+    [handleClose]
+  );
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape);
+      dialogRef.current?.focus();
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [isOpen, handleEscape]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,8 +134,15 @@ const TaskModal: React.FC = () => {
         }
       }}
     >
-      <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="task-modal-title"
+        tabIndex={-1}
+        className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto focus:outline-none"
+      >
+        <h2 id="task-modal-title" className="text-xl font-bold mb-4">
           {taskToEdit ? "Edit Task" : "Create New Task"}
         </h2>
 

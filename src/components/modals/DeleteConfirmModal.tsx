@@ -1,8 +1,8 @@
 "use client";
 
-// // src/components/modals/DeleteConfirmModal.tsx
+// src/components/modals/DeleteConfirmModal.tsx
 
-import React from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { closeDeleteConfirm } from "../../features/ui/uiSlice";
 import { deleteTask, deleteTasks } from "../../features/tasks/tasksSlice";
@@ -12,21 +12,30 @@ const DeleteConfirmModal: React.FC = () => {
   const isOpen = useAppSelector((state) => state.ui.isDeleteConfirmOpen);
   const taskId = useAppSelector((state) => state.ui.deletingTaskId);
   const deletingTaskIds = useAppSelector((state) => state.ui.deletingTaskIds);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  const handleClose = useCallback(() => {
+    dispatch(closeDeleteConfirm());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
-  const handleClose = () => {
-    dispatch(closeDeleteConfirm());
-  };
-
   const handleDelete = () => {
-    // If taskId is null and we have deletingTaskIds, it's a bulk delete
     if (!taskId && deletingTaskIds.length > 0) {
       dispatch(deleteTasks(deletingTaskIds));
     } else if (taskId) {
       dispatch(deleteTask(taskId));
     }
-
     handleClose();
   };
 
@@ -38,13 +47,21 @@ const DeleteConfirmModal: React.FC = () => {
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          handleClose();
-        }
+        if (e.target === e.currentTarget) handleClose();
       }}
     >
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4 text-gray-900">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-confirm-title"
+        tabIndex={-1}
+        className="bg-white rounded-lg p-6 w-full max-w-md focus:outline-none"
+      >
+        <h2
+          id="delete-confirm-title"
+          className="text-xl font-bold mb-4 text-gray-900"
+        >
           Confirm Deletion
         </h2>
 

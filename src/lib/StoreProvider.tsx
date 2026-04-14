@@ -3,15 +3,15 @@
 import { useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "./store";
+import { makeStore, AppStore } from "./store";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { addTask } from "../features/tasks/tasksSlice";
 import { getWelcomeTasks } from "../utils/welcomeTasks";
-import { Task } from "../types";
+import type { Persistor } from "redux-persist";
 
 function WelcomeTasksSeeder() {
   const dispatch = useAppDispatch();
-  const tasks = useAppSelector((state) => state.tasks.items as Task[]);
+  const tasks = useAppSelector((state) => state.tasks.items);
   const seeded = useRef(false);
 
   useEffect(() => {
@@ -32,9 +32,16 @@ export default function StoreProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const storeRef = useRef<{ store: AppStore; persistor: Persistor } | null>(
+    null
+  );
+  if (!storeRef.current) {
+    storeRef.current = makeStore();
+  }
+
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+    <Provider store={storeRef.current.store}>
+      <PersistGate loading={null} persistor={storeRef.current.persistor}>
         <WelcomeTasksSeeder />
         {children}
       </PersistGate>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useAppDispatch } from "../../lib/hooks";
 import { openDeleteConfirm, openTaskModal } from "../../features/ui/uiSlice";
 import { Task } from "../../types";
@@ -17,6 +17,16 @@ interface TaskDetailViewProps {
 
 const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
   const dispatch = useAppDispatch();
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
 
   const handleEdit = () => {
     dispatch(openTaskModal(task.id));
@@ -36,9 +46,16 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
         }
       }}
     >
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="task-detail-title"
+        tabIndex={-1}
+        className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto focus:outline-none"
+      >
         <div className="px-6 py-4 border-b flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800">Task Details</h2>
+          <h2 id="task-detail-title" className="text-xl font-semibold text-gray-800">Task Details</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
