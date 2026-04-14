@@ -33,9 +33,10 @@ export default function ViewsLayout({
         </div>
       </main>
       <TaskModal />
-      {isTaskDetailOpen && taskBeingViewed && (
+      {taskBeingViewed && (
         <TaskDetailView
           task={taskBeingViewed}
+          open={isTaskDetailOpen}
           onClose={() => dispatch(closeTaskDetail())}
         />
       )}
