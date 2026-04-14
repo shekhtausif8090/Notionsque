@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { closeTaskModal } from "../../features/ui/uiSlice";
 import { addTask, updateTask } from "../../features/tasks/tasksSlice";
 import { Task, TaskStatus, TaskPriority } from "../../types";

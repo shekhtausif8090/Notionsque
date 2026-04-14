@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  ViewMode,
   SortConfig,
   FilterConfig,
   TaskStatus,
@@ -8,7 +7,6 @@ import {
 } from "../../types";
 
 interface UiState {
-  viewMode: ViewMode;
   sortConfig: SortConfig;
   filterConfig: FilterConfig;
   isTaskModalOpen: boolean;
@@ -24,7 +22,6 @@ interface UiState {
 }
 
 const initialState: UiState = {
-  viewMode: "list",
   sortConfig: {
     field: "createdAt",
     direction: "desc",
@@ -50,10 +47,6 @@ export const uiSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
-    setViewMode: (state, action: PayloadAction<ViewMode>) => {
-      state.viewMode = action.payload;
-    },
-
     setSortConfig: (state, action: PayloadAction<Partial<SortConfig>>) => {
       if (
         action.payload.field === state.sortConfig.field &&
@@ -141,7 +134,6 @@ export const uiSlice = createSlice({
 });
 
 export const {
-  setViewMode,
   setSortConfig,
   setFilterStatus,
   setFilterPriority,
@@ -158,7 +150,6 @@ export const {
 
 export default uiSlice.reducer;
 
-export const selectViewMode = (state: { ui: UiState }) => state.ui.viewMode;
 export const selectSortConfig = (state: { ui: UiState }) => state.ui.sortConfig;
 export const selectFilterConfig = (state: { ui: UiState }) =>
   state.ui.filterConfig;

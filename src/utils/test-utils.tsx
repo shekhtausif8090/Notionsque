@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import tasksReducer from "../features/tasks/tasksSlice";
 import uiReducer from "../features/ui/uiSlice";
-import { store } from "../app/store";
+import { store } from "../lib/store";
 
 export type AppStore = typeof store;
 export type AppDispatch = typeof store.dispatch;

@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../lib/hooks";
 import {
   openTaskModal,
   setSortConfig,
@@ -8,13 +10,12 @@ import {
   openBulkEdit,
   selectIsDeleteConfirmOpen,
 } from "../../features/ui/uiSlice";
+import { Task, SortField, SortDirection } from "../../types";
 import {
-  Task,
-  SortField,
-  SortDirection,
-  TaskStatus,
-  TaskPriority,
-} from "../../types";
+  getStatusBadgeClass,
+  getPriorityBadgeClass,
+  formatDate,
+} from "../../lib/utils";
 
 const ListView: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -157,38 +158,8 @@ const ListView: React.FC = () => {
     }
   };
 
-  const getStatusBadgeClass = (status: TaskStatus) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-100 text-green-800";
-      case "in progress":
-        return "bg-blue-100 text-blue-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getPriorityBadgeClass = (priority: TaskPriority) => {
-    switch (priority) {
-      case "urgent":
-        return "bg-red-100 text-red-800";
-      case "high":
-        return "bg-orange-100 text-orange-800";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800";
-      case "low":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   const handlePageChange = (page: number) => {
     setCurrentPage(Math.max(1, Math.min(page, totalPages)));
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
   };
 
   return (

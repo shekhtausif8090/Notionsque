@@ -232,4 +232,4 @@ export const {
 
 export default tasksSlice.reducer;
 
-export const selectAllTasks = (state: any) => state.tasks.present.items;
+export const selectAllTasks = (state: { tasks: TasksState }) => state.tasks.items;

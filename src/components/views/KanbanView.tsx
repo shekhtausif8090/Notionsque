@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import {
   DragDropContext,
@@ -5,7 +7,7 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../lib/hooks";
 import {
   openTaskModal,
   openTaskDetail,
@@ -16,7 +18,8 @@ import {
   reorderTasks,
   addTask,
 } from "../../features/tasks/tasksSlice";
-import { TaskPriority, TaskStatus, Task } from "../../types";
+import { TaskPriority, Task } from "../../types";
+import { getStatusBadgeClass } from "../../lib/utils";
 
 const KanbanView: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -191,17 +194,6 @@ const KanbanView: React.FC = () => {
 
   const getPriorityName = (priority: TaskPriority): string => {
     return priority.charAt(0).toUpperCase() + priority.slice(1);
-  };
-
-  const getStatusBadgeClass = (status: TaskStatus): string => {
-    switch (status) {
-      case "completed":
-        return "bg-green-100 text-green-800";
-      case "in progress":
-        return "bg-blue-100 text-blue-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
   };
 
   const handleEditTask = (taskId: string) => {

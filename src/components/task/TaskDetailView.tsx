@@ -1,7 +1,14 @@
+"use client";
+
 import React from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch } from "../../lib/hooks";
 import { openDeleteConfirm, openTaskModal } from "../../features/ui/uiSlice";
-import { Task, TaskStatus, TaskPriority } from "../../types";
+import { Task } from "../../types";
+import {
+  getStatusBadgeClass,
+  getPriorityBadgeClass,
+  formatDate,
+} from "../../lib/utils";
 
 interface TaskDetailViewProps {
   task: Task;
@@ -11,10 +18,6 @@ interface TaskDetailViewProps {
 const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
   const dispatch = useAppDispatch();
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
-  };
-
   const handleEdit = () => {
     dispatch(openTaskModal(task.id));
     onClose();
@@ -22,32 +25,6 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({ task, onClose }) => {
 
   const handleDelete = () => {
     dispatch(openDeleteConfirm(task.id));
-  };
-
-  const getStatusBadgeClass = (status: TaskStatus) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-100 text-green-800";
-      case "in progress":
-        return "bg-blue-100 text-blue-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getPriorityBadgeClass = (priority: TaskPriority) => {
-    switch (priority) {
-      case "urgent":
-        return "bg-red-100 text-red-800";
-      case "high":
-        return "bg-orange-100 text-orange-800";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800";
-      case "low":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
   };
 
   return (

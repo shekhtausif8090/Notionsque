@@ -1,7 +1,9 @@
+"use client";
+
 // // src/components/modals/DeleteConfirmModal.tsx
 
 import React from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { closeDeleteConfirm } from "../../features/ui/uiSlice";
 import { deleteTask, deleteTasks } from "../../features/tasks/tasksSlice";
 

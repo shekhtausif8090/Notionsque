@@ -47,7 +47,6 @@ export interface StateWithHistory<T> {
 }
 
 export interface UiState {
-  viewMode: ViewMode;
   sortConfig: SortConfig;
   filterConfig: FilterConfig;
   isTaskModalOpen: boolean;

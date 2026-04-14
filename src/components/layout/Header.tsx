@@ -1,42 +1,36 @@
+"use client";
+
 import React from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import {
-  setViewMode,
   openTaskModal,
   setSearchTerm,
   setFilterStatus,
   setFilterPriority,
 } from "../../features/ui/uiSlice";
-import { ViewMode, TaskStatus, TaskPriority } from "../../types";
+import { TaskStatus, TaskPriority } from "../../types";
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();
-  const viewMode = useAppSelector((state) => state.ui.viewMode);
+  const pathname = usePathname();
   const filterConfig = useAppSelector((state) => state.ui.filterConfig);
 
-  // Handle view mode toggle
-  const handleViewModeChange = (mode: ViewMode) => {
-    dispatch(setViewMode(mode));
-  };
-
-  // Handle opening the create task modal
   const handleCreateTask = () => {
-    dispatch(openTaskModal(null)); // null means we're creating a new task
+    dispatch(openTaskModal(null));
   };
 
-  // Handle search input changes
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSearchTerm(e.target.value));
   };
 
-  // Handle status filter changes
   const handleStatusFilterChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     dispatch(setFilterStatus(e.target.value as TaskStatus | "all"));
   };
 
-  // Handle priority filter changes
   const handlePriorityFilterChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -62,26 +56,26 @@ const Header: React.FC = () => {
             </button>
 
             <div className="flex space-x-2">
-              <button
-                onClick={() => handleViewModeChange("list")}
+              <Link
+                href="/list"
                 className={`px-3 py-1 rounded-md ${
-                  viewMode === "list"
+                  pathname === "/list"
                     ? "bg-gray-200 text-gray-800"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
                 List
-              </button>
-              <button
-                onClick={() => handleViewModeChange("kanban")}
+              </Link>
+              <Link
+                href="/kanban"
                 className={`px-3 py-1 rounded-md ${
-                  viewMode === "kanban"
+                  pathname === "/kanban"
                     ? "bg-gray-200 text-gray-800"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
                 Kanban
-              </button>
+              </Link>
             </div>
           </div>
         </div>
