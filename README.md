@@ -1,96 +1,133 @@
 # Notionesque
 
-A powerful task management application built with React, Redux, TypeScript, and Tailwind CSS. This application provides a comprehensive set of features for managing tasks with advanced capabilities similar to a simplified Notion.
+Task management app — list + kanban views, drag-drop, bulk ops, custom fields. Built on Next.js App Router with a Postgres (Neon) backend.
 
 ## Features
 
-### Multiple View Modes
+### Views
 
-* **List View**: Table format with sorting and pagination
-* **Kanban View**: Drag-and-drop interface organized by priority
+- **List View** — table with filters, sorting, pagination
+- **Kanban View** — drag-drop between priority columns
 
-### Rich Task Management
+### Tasks
 
-* Create, edit, and delete tasks
-* Set title, description, status, and priority
-* Add custom fields for extended information
-* View detailed task information
+- Create / edit / delete (single + bulk)
+- Title, description, status, priority
+- Arbitrary custom fields (jsonb)
+- Detail view modal
 
-### Advanced Filtering & Sorting
+### Filtering & sorting
 
-* Filter by status and priority
-* Search by task name
-* Sort by any column in list view
+- Filter by status / priority
+- Search by title or description
+- Sort by any column
 
-### User-Friendly Interface
+### Persistence
 
-* Drag and drop tasks between priority columns
-* Bulk selection and actions
-* Responsive design for all screen sizes
+- Postgres (Neon) via Drizzle ORM (backend wired)
+- Redux + redux-persist on the client (in-flight migration to RTK Query)
 
-### Data Persistence
+## Tech stack
 
-* Automatic local storage saving
-* 
-## Tech Stack
+- **Next.js 16** App Router, **React 19**, **TypeScript** strict
+- **Redux Toolkit** + **redux-persist**
+- **Drizzle ORM** + **`@neondatabase/serverless`** (HTTP driver)
+- **Tailwind v4**
+- **`@hello-pangea/dnd`** for drag-drop
+- **`lucide-react`** icons
+- **`zod`** for API validation
+- **Radix** `Dialog` / `AlertDialog`
 
-* **React**: UI library for building the interface
-* **TypeScript**: Static typing for better development experience
-* **Redux Toolkit**: State management with advanced features
-* **Redux-Persist**: Local storage persistence
-* **@hello-pangea/dnd**: Drag-and-drop functionality
-* **Tailwind CSS**: Utility-first CSS framework
-
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
-* Node.js (v14 or newer)
-* npm or yarn
+- Node.js 20+ (or Bun)
+- A Neon Postgres database (or any Postgres) — copy the connection string
 
-### Installation
-
-1. Clone the repository
+### Install
 
 ```bash
 git clone https://github.com/shekhtausif8090/Notionsque
+cd Notionsque
+bun install
 ```
 
-2. Install dependencies
+### Environment
+
+Copy `.env.example` → `.env.local` and set:
+
+```
+DATABASE_URL=postgresql://user:password@host.neon.tech/dbname?sslmode=require
+```
+
+### Database
 
 ```bash
-npm install
+bun run db:generate   # emit SQL migration to ./drizzle
+bun run db:push       # apply schema directly (dev)
 # or
-yarn
+bun run db:migrate    # run committed migrations
 ```
 
-3. Start the development server
+### Run
 
 ```bash
-npm run dev
-# or
-yarn dev
+bun run dev
 ```
 
-4. Open your browser to http://localhost:5173
+Open <http://localhost:3000>.
 
-## Project Structure
+## Scripts
+
+| Script | What it does |
+| --- | --- |
+| `dev` | Next.js dev server |
+| `build` | production build |
+| `start` | serve production build |
+| `lint` | `next lint` |
+| `db:generate` | drizzle-kit generate |
+| `db:push` | drizzle-kit push (dev) |
+| `db:migrate` | drizzle-kit migrate |
+| `db:studio` | drizzle-kit studio |
+
+## Project layout
 
 ```
 src/
-├── app/                    # Redux store setup and app hooks
-├── components/             # UI components
-│   ├── common/             # Reusable components
-│   ├── layout/             # Layout components (Header)
-│   ├── modals/             # Modal components (TaskModal)
-│   ├── task/               # Task-related components (TaskDetailView)
-│   └── views/              # Main views (ListView, KanbanView)
-├── features/               # Redux Toolkit feature slices
-│   ├── tasks/              # Tasks slice (CRUD operations)
-│   └── ui/                 # UI state slice (view mode, filters, etc.)
-├── types/                  # TypeScript type definitions
-├── App.tsx                 # Main App component
-└── main.tsx                # Entry point
+├── app/
+│   ├── (views)/{kanban,list}/    # client views
+│   └── api/tasks/                # REST route handlers
+├── components/{layout,modals,views}/
+├── db/{schema,index}.ts          # Drizzle (server-only)
+├── features/{tasks,ui}/          # Redux slices
+├── lib/
+│   ├── api/                      # validators, mappers, response, serialize
+│   ├── store.ts, StoreProvider.tsx, hooks.ts
+│   └── utils.ts, welcomeTasks.ts
+└── types/index.ts
 ```
 
+Path alias `@/*` → `./src/*` (use it; avoid deep relative imports).
 
+## API
+
+All endpoints under `/api/tasks`:
+
+| Method | Route                           | Purpose                                   |
+| ------ | ------------------------------- | ----------------------------------------- |
+| GET    | `/api/tasks`                    | list (filter / sort / search)             |
+| POST   | `/api/tasks`                    | create (server computes `position`)       |
+| GET    | `/api/tasks/[id]`               | fetch one                                 |
+| PATCH  | `/api/tasks/[id]`               | update; cross-priority drag w/ index      |
+| DELETE | `/api/tasks/[id]`               | delete                                    |
+| POST   | `/api/tasks/bulk`               | bulk create                               |
+| PATCH  | `/api/tasks/bulk`               | bulk status / priority update             |
+| DELETE | `/api/tasks/bulk`               | bulk delete                               |
+| PATCH  | `/api/tasks/reorder`            | same-priority reorder (single CASE UPDATE)|
+| PATCH  | `/api/tasks/[id]/custom-fields` | set / remove a single jsonb key           |
+
+## Notes
+
+- DB enum values are snake_case (`not_started`, `in_progress`); the TypeScript types use spaces (`"not started"`). Mapping happens at the API boundary in [src/lib/api/mappers.ts](src/lib/api/mappers.ts).
+- The Neon HTTP driver does not support multi-statement transactions. Position-touching ops are written as single SQL statements (CTEs, `CASE` UPDATE, `jsonb_set`).
