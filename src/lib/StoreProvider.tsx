@@ -6,7 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { makeStore, AppStore } from "./store";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { addTask } from "../features/tasks/tasksSlice";
-import { getWelcomeTasks } from "../utils/welcomeTasks";
+import { getWelcomeTasks } from "./welcomeTasks";
 import type { Persistor } from "redux-persist";
 
 function WelcomeTasksSeeder() {

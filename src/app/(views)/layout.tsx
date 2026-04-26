@@ -4,7 +4,7 @@ import Header from "../../components/layout/Header";
 import TaskModal from "../../components/modals/TaskModal";
 import BulkEditModal from "../../components/modals/BulkEditModal";
 import DeleteConfirmModal from "../../components/modals/DeleteConfirmModal";
-import TaskDetailView from "../../components/task/TaskDetailView";
+import TaskDetailView from "../../components/views/TaskDetailView";
 import { useAppSelector, useAppDispatch } from "../../lib/hooks";
 import { closeTaskDetail } from "../../features/ui/uiSlice";
 
