@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import { ChevronDown, Trash2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { closeTaskModal } from "../../features/ui/uiSlice";
 import { addTask, updateTask } from "../../features/tasks/tasksSlice";
@@ -187,20 +188,11 @@ const TaskModal: React.FC = () => {
                   {Object.keys(customFields).length > 0 &&
                     `(${Object.keys(customFields).length})`}
                 </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                <ChevronDown
                   className={`h-5 w-5 transition-transform ${
                     showCustomFields ? "transform rotate-180" : ""
                   }`}
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                />
               </button>
 
               {showCustomFields && (
@@ -224,8 +216,10 @@ const TaskModal: React.FC = () => {
                             type="button"
                             onClick={() => handleRemoveCustomField(name)}
                             className="text-red-600 hover:text-red-800 text-sm px-2 py-1 flex-shrink-0"
+                            title="Remove field"
+                            aria-label="Remove field"
                           >
-                            Delete
+                            <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       ))}

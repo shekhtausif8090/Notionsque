@@ -2,6 +2,7 @@
 
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import { X, Pencil, Trash2 } from "lucide-react";
 import { useAppDispatch } from "../../lib/hooks";
 import { openDeleteConfirm, openTaskModal } from "../../features/ui/uiSlice";
 import { Task } from "../../types";
@@ -43,20 +44,7 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({
               Task Details
             </Dialog.Title>
             <Dialog.Close className="text-gray-500 hover:text-gray-700">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <X className="h-6 w-6" strokeWidth={2} />
             </Dialog.Close>
           </div>
 
@@ -127,15 +115,19 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({
           <div className="px-6 py-4 border-t bg-gray-50 flex justify-end space-x-3">
             <button
               onClick={handleDelete}
-              className="px-4 py-2 border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors"
+              className="px-4 py-2 border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors inline-flex items-center"
+              title="Delete task"
+              aria-label="Delete task"
             >
-              Delete
+              <Trash2 className="h-4 w-4" />
             </button>
             <button
               onClick={handleEdit}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors inline-flex items-center"
+              title="Edit task"
+              aria-label="Edit task"
             >
-              Edit
+              <Pencil className="h-4 w-4" />
             </button>
           </div>
         </Dialog.Content>

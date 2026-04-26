@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useAppSelector, useAppDispatch } from "../../lib/hooks";
 import {
   openTaskModal,
@@ -300,14 +301,18 @@ const ListView: React.FC = () => {
                   <button
                     onClick={() => handleEditTask(task)}
                     className="text-indigo-600 hover:text-indigo-900 mr-4"
+                    title="Edit task"
+                    aria-label="Edit task"
                   >
-                    Edit
+                    <Pencil className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteTask(task.id)}
                     className="text-red-600 hover:text-red-900"
+                    title="Delete task"
+                    aria-label="Delete task"
                   >
-                    Delete
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </td>
               </tr>

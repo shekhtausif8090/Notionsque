@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import {
   DragDropContext,
   Droppable,
@@ -234,14 +235,18 @@ const KanbanView: React.FC = () => {
           <button
             onClick={() => handleEditTask(task.id)}
             className="text-indigo-600 hover:text-indigo-900 text-sm"
+            title="Edit task"
+            aria-label="Edit task"
           >
-            Edit
+            <Pencil className="h-4 w-4" />
           </button>
           <button
             onClick={() => handleDeleteTask(task.id)}
             className="text-red-600 hover:text-red-900 text-sm"
+            title="Delete task"
+            aria-label="Delete task"
           >
-            Delete
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
       </div>
