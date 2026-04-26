@@ -1,4 +1,4 @@
-import { TaskStatus, TaskPriority } from "../types";
+import { TaskStatus, TaskPriority } from "@/types";
 
 export const getStatusBadgeClass = (status: TaskStatus): string => {
   switch (status) {

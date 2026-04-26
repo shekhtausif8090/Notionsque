@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import { useAppSelector, useAppDispatch } from "../../lib/hooks";
+import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import {
   openTaskModal,
   setSortConfig,
@@ -10,13 +10,13 @@ import {
   openDeleteConfirm,
   openBulkEdit,
   selectIsDeleteConfirmOpen,
-} from "../../features/ui/uiSlice";
-import { Task, SortField, SortDirection } from "../../types";
+} from "@/features/ui/uiSlice";
+import { Task, SortField, SortDirection } from "@/types";
 import {
   getStatusBadgeClass,
   getPriorityBadgeClass,
   formatDate,
-} from "../../lib/utils";
+} from "@/lib/utils";
 
 const ListView: React.FC = () => {
   const dispatch = useAppDispatch();

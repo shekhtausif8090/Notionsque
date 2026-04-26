@@ -1,4 +1,4 @@
-import { TaskPriority, TaskStatus } from "../types";
+import { TaskPriority, TaskStatus } from "@/types";
 
 export const getWelcomeTasks = () => {
   return [

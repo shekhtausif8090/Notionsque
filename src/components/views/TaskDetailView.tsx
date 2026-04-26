@@ -3,14 +3,14 @@
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X, Pencil, Trash2 } from "lucide-react";
-import { useAppDispatch } from "../../lib/hooks";
-import { openDeleteConfirm, openTaskModal } from "../../features/ui/uiSlice";
-import { Task } from "../../types";
+import { useAppDispatch } from "@/lib/hooks";
+import { openDeleteConfirm, openTaskModal } from "@/features/ui/uiSlice";
+import { Task } from "@/types";
 import {
   getStatusBadgeClass,
   getPriorityBadgeClass,
   formatDate,
-} from "../../lib/utils";
+} from "@/lib/utils";
 
 interface TaskDetailViewProps {
   task: Task;

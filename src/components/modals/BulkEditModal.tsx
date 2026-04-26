@@ -3,10 +3,10 @@
 // src/components/modals/BulkEditModal.tsx
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useAppDispatch, useAppSelector } from "../../lib/hooks";
-import { closeBulkEdit } from "../../features/ui/uiSlice";
-import { bulkUpdateTasks } from "../../features/tasks/tasksSlice";
-import { TaskStatus, TaskPriority } from "../../types";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { closeBulkEdit } from "@/features/ui/uiSlice";
+import { bulkUpdateTasks } from "@/features/tasks/tasksSlice";
+import { TaskStatus, TaskPriority } from "@/types";
 
 const BulkEditModal: React.FC = () => {
   const dispatch = useAppDispatch();

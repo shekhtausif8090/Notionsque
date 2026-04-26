@@ -3,14 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "../../lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   openTaskModal,
   setSearchTerm,
   setFilterStatus,
   setFilterPriority,
-} from "../../features/ui/uiSlice";
-import { TaskStatus, TaskPriority } from "../../types";
+} from "@/features/ui/uiSlice";
+import { TaskStatus, TaskPriority } from "@/types";
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();

@@ -8,19 +8,19 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { useAppSelector, useAppDispatch } from "../../lib/hooks";
+import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import {
   openTaskModal,
   openTaskDetail,
   openDeleteConfirm,
-} from "../../features/ui/uiSlice";
+} from "@/features/ui/uiSlice";
 import {
   updateTaskPriority,
   reorderTasks,
   addTask,
-} from "../../features/tasks/tasksSlice";
-import { TaskPriority, Task } from "../../types";
-import { getStatusBadgeClass } from "../../lib/utils";
+} from "@/features/tasks/tasksSlice";
+import { TaskPriority, Task } from "@/types";
+import { getStatusBadgeClass } from "@/lib/utils";
 
 const KanbanView: React.FC = () => {
   const dispatch = useAppDispatch();

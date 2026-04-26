@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ChevronDown, Trash2 } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "../../lib/hooks";
-import { closeTaskModal } from "../../features/ui/uiSlice";
-import { addTask, updateTask } from "../../features/tasks/tasksSlice";
-import { TaskStatus, TaskPriority } from "../../types";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { closeTaskModal } from "@/features/ui/uiSlice";
+import { addTask, updateTask } from "@/features/tasks/tasksSlice";
+import { TaskStatus, TaskPriority } from "@/types";
 
 const TaskModal: React.FC = () => {
   const dispatch = useAppDispatch();

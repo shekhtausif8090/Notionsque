@@ -1,4 +1,4 @@
-import type { TaskStatus, TaskPriority } from "../../types";
+import type { TaskStatus, TaskPriority } from "@/types";
 
 type DbTaskStatus = "not_started" | "in_progress" | "completed";
 type DbTaskPriority = TaskPriority;

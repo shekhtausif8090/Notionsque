@@ -4,7 +4,7 @@ import {
   FilterConfig,
   TaskStatus,
   TaskPriority,
-} from "../../types";
+} from "@/types";
 
 interface UiState {
   sortConfig: SortConfig;

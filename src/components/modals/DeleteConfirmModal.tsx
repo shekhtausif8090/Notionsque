@@ -4,9 +4,9 @@
 
 import React from "react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import { useAppDispatch, useAppSelector } from "../../lib/hooks";
-import { closeDeleteConfirm } from "../../features/ui/uiSlice";
-import { deleteTask, deleteTasks } from "../../features/tasks/tasksSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { closeDeleteConfirm } from "@/features/ui/uiSlice";
+import { deleteTask, deleteTasks } from "@/features/tasks/tasksSlice";
 
 const DeleteConfirmModal: React.FC = () => {
   const dispatch = useAppDispatch();
