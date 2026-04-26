@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import {
   DragDropContext,
   Droppable,
@@ -21,6 +21,21 @@ import {
 } from "@/features/tasks/tasksSlice";
 import { TaskPriority, Task } from "@/types";
 import { getStatusBadgeClass } from "@/lib/utils";
+
+const priorityDotClass = (priority: TaskPriority): string => {
+  switch (priority) {
+    case "urgent":
+      return "bg-red-500";
+    case "high":
+      return "bg-orange-500";
+    case "medium":
+      return "bg-yellow-500";
+    case "low":
+      return "bg-emerald-500";
+    default:
+      return "bg-zinc-400 dark:bg-zinc-500";
+  }
+};
 
 const KanbanView: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -171,25 +186,11 @@ const KanbanView: React.FC = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, priority: TaskPriority) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       handleCreateTask(priority);
     } else if (e.key === "Escape") {
       handleCancelTask();
-    }
-  };
-
-  const getPriorityColorClass = (priority: TaskPriority): string => {
-    switch (priority) {
-      case "urgent":
-        return "bg-red-100 border-red-500";
-      case "high":
-        return "bg-orange-100 border-orange-500";
-      case "medium":
-        return "bg-yellow-100 border-yellow-500";
-      case "low":
-        return "bg-green-100 border-green-500";
-      default:
-        return "bg-gray-100 border-gray-400";
     }
   };
 
@@ -206,172 +207,182 @@ const KanbanView: React.FC = () => {
   };
 
   const TaskCard = ({ task }: { task: Task }) => (
-    <div className="bg-white rounded shadow p-3 border border-gray-200 hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-start">
+    <div className="group rounded-md border border-black/5 bg-white p-3 transition-all hover:border-black/10 hover:shadow-sm dark:border-white/10 dark:bg-zinc-950 dark:hover:border-white/20">
+      <div className="flex items-start justify-between gap-2">
         <h4
-          className="font-medium text-gray-900 cursor-pointer hover:text-blue-600"
+          className="line-clamp-2 cursor-pointer text-sm font-medium text-zinc-900 hover:text-violet-600 dark:text-zinc-100 dark:hover:text-violet-400"
           onClick={() => dispatch(openTaskDetail(task.id))}
         >
           {task.title}
         </h4>
+
+        <div className="flex flex-shrink-0 gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+          <button
+            onClick={() => handleEditTask(task.id)}
+            className="rounded p-1 text-zinc-400 hover:bg-black/5 hover:text-zinc-900 dark:hover:bg-white/10 dark:hover:text-zinc-100"
+            title="Edit task"
+            aria-label="Edit task"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => handleDeleteTask(task.id)}
+            className="rounded p-1 text-zinc-400 hover:bg-red-500/10 hover:text-red-500"
+            title="Delete task"
+            aria-label="Delete task"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
       {task.description && (
-        <p className="mt-1 text-sm text-gray-600 line-clamp-2">
+        <p className="mt-1 line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400">
           {task.description}
         </p>
       )}
 
-      <div className="mt-3 flex items-center justify-between">
+      <div className="mt-2.5 flex items-center justify-between">
         <span
-          className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(
+          className={`px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide rounded-full ${getStatusBadgeClass(
             task.status
           )}`}
         >
           {task.status}
         </span>
-
-        <div className="flex space-x-2">
-          <button
-            onClick={() => handleEditTask(task.id)}
-            className="text-indigo-600 hover:text-indigo-900 text-sm"
-            title="Edit task"
-            aria-label="Edit task"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => handleDeleteTask(task.id)}
-            className="text-red-600 hover:text-red-900 text-sm"
-            title="Delete task"
-            aria-label="Delete task"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
       </div>
 
       {Object.keys(task.customFields).length > 0 && (
-        <div className="mt-2 pt-2 border-t border-gray-200">
-          <p className="text-xs text-gray-500 font-medium">Custom fields:</p>
-          <div className="mt-1 text-xs text-gray-600">
-            {Object.entries(task.customFields).map(([key, value]) => (
-              <div key={key}>
-                <span className="font-medium">{key}:</span> {value}
-              </div>
-            ))}
-          </div>
+        <div className="mt-2 space-y-0.5 border-t border-black/5 pt-2 dark:border-white/10">
+          {Object.entries(task.customFields).map(([key, value]) => (
+            <div
+              key={key}
+              className="text-[11px] text-zinc-500 dark:text-zinc-400"
+            >
+              <span className="font-medium text-zinc-600 dark:text-zinc-300">
+                {key}:
+              </span>{" "}
+              {String(value)}
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
 
   return (
-    <div className="h-full flex justify-center align-center">
+    <div className="h-full">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex space-x-4 overflow-x-auto pb-4">
+        <div className="flex space-x-3 overflow-x-auto pb-4">
           {Object.entries(tasksByPriority).map(([priority, priorityTasks]) => (
             <div
               key={priority}
-              className={`flex-shrink-0 w-72 rounded-lg border-t-4 ${getPriorityColorClass(
-                priority as TaskPriority
-              )}`}
+              className="flex w-72 flex-shrink-0 flex-col rounded-xl border border-black/5 bg-zinc-100/60 dark:border-white/5 dark:bg-zinc-900/40"
             >
-              <div className="bg-white rounded-b-lg shadow h-full flex flex-col">
-                <div className="p-3 border-b bg-gray-50">
-                  <h3 className="font-medium">
-                    {getPriorityName(priority as TaskPriority)} (
-                    {priorityTasks.length})
+              <div className="flex items-center justify-between px-3 py-2.5 border-b border-black/5 dark:border-white/5">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`h-2 w-2 rounded-full ${priorityDotClass(
+                      priority as TaskPriority
+                    )}`}
+                  />
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
+                    {getPriorityName(priority as TaskPriority)}
                   </h3>
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                    {priorityTasks.length}
+                  </span>
                 </div>
-
-                <Droppable droppableId={priority}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className={`flex-1 p-2 overflow-y-auto min-h-[200px] ${
-                        snapshot.isDraggingOver ? "bg-blue-50" : "bg-gray-50"
-                      }`}
-                    >
-                      {priorityTasks.length === 0 ? (
-                        <p className="text-gray-400 text-sm text-center py-4">
-                          No tasks
-                        </p>
-                      ) : (
-                        <div className="space-y-2">
-                          {priorityTasks.map((task, index) => (
-                            <Draggable
-                              key={task.id}
-                              draggableId={task.id}
-                              index={index}
-                            >
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className={`${
-                                    snapshot.isDragging ? "opacity-70" : ""
-                                  }`}
-                                >
-                                  <TaskCard task={task} />
-                                </div>
-                              )}
-                            </Draggable>
-                          ))}
-                        </div>
-                      )}
-                      {provided.placeholder}
-
-                      {activeInputColumn === (priority as TaskPriority) ? (
-                        <div className="mt-2 p-2 bg-white rounded shadow border border-gray-200">
-                          <textarea
-                            value={newTaskInputs[priority as TaskPriority]}
-                            onChange={(e) =>
-                              handleInputChange(
-                                priority as TaskPriority,
-                                e.target.value
-                              )
-                            }
-                            onKeyDown={(e) =>
-                              handleKeyDown(e, priority as TaskPriority)
-                            }
-                            placeholder="Enter task title"
-                            className="w-full p-2 border border-gray-300 rounded mb-2 resize-y min-h-[60px]"
-                            autoFocus
-                          />
-                          <div className="flex justify-between">
-                            <button
-                              onClick={() =>
-                                handleCreateTask(priority as TaskPriority)
-                              }
-                              className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
-                            >
-                              Add
-                            </button>
-                            <button
-                              onClick={handleCancelTask}
-                              className="px-3 py-1 text-gray-600 rounded text-sm hover:bg-gray-100"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() =>
-                            handleShowInput(priority as TaskPriority)
-                          }
-                          className="mt-2 w-full p-2 text-blue-600 hover:bg-blue-50 rounded text-sm flex items-center justify-center"
-                        >
-                          <span className="text-lg mr-1">+</span> Add task
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </Droppable>
               </div>
+
+              <Droppable droppableId={priority}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`flex-1 min-h-[200px] overflow-y-auto p-2 transition-colors ${
+                      snapshot.isDraggingOver ? "bg-violet-500/5" : ""
+                    }`}
+                  >
+                    {priorityTasks.length === 0 &&
+                    activeInputColumn !== (priority as TaskPriority) ? (
+                      <div className="rounded-md border border-dashed border-black/10 p-4 text-center text-xs text-zinc-400 dark:border-white/10 dark:text-zinc-500">
+                        Drop tasks here
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {priorityTasks.map((task, index) => (
+                          <Draggable
+                            key={task.id}
+                            draggableId={task.id}
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={
+                                  snapshot.isDragging ? "opacity-70" : ""
+                                }
+                              >
+                                <TaskCard task={task} />
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                      </div>
+                    )}
+                    {provided.placeholder}
+
+                    {activeInputColumn === (priority as TaskPriority) ? (
+                      <div className="mt-2 rounded-md border border-black/5 bg-white p-2 shadow-sm dark:border-white/10 dark:bg-zinc-900">
+                        <textarea
+                          value={newTaskInputs[priority as TaskPriority]}
+                          onChange={(e) =>
+                            handleInputChange(
+                              priority as TaskPriority,
+                              e.target.value
+                            )
+                          }
+                          onKeyDown={(e) =>
+                            handleKeyDown(e, priority as TaskPriority)
+                          }
+                          placeholder="Enter task title"
+                          className="mb-2 min-h-[60px] w-full resize-y rounded border border-black/10 bg-white p-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500/40 dark:border-white/10 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder-zinc-500"
+                          autoFocus
+                        />
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={handleCancelTask}
+                            className="rounded px-3 py-1 text-sm text-zinc-600 hover:bg-black/5 dark:text-zinc-300 dark:hover:bg-white/5"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleCreateTask(priority as TaskPriority)
+                            }
+                            className="rounded bg-violet-600 px-3 py-1 text-sm text-white hover:bg-violet-500"
+                          >
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          handleShowInput(priority as TaskPriority)
+                        }
+                        className="mt-2 flex w-full items-center justify-center gap-1 rounded p-2 text-sm text-zinc-500 transition-colors hover:bg-black/5 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/5 dark:hover:text-zinc-100"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Add task
+                      </button>
+                    )}
+                  </div>
+                )}
+              </Droppable>
             </div>
           ))}
         </div>
