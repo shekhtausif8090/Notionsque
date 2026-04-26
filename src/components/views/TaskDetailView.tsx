@@ -43,6 +43,9 @@ const TaskDetailView: React.FC<TaskDetailViewProps> = ({
             <Dialog.Title className="text-xl font-semibold text-gray-800">
               Task Details
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Full details of the selected task, including status, priority, timestamps, description, and custom fields.
+            </Dialog.Description>
             <Dialog.Close className="text-gray-500 hover:text-gray-700">
               <X className="h-6 w-6" strokeWidth={2} />
             </Dialog.Close>

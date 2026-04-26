@@ -116,6 +116,11 @@ const TaskModal: React.FC = () => {
           <Dialog.Title className="text-xl font-bold mb-4">
             {taskToEdit ? "Edit Task" : "Create New Task"}
           </Dialog.Title>
+          <Dialog.Description className="sr-only">
+            {taskToEdit
+              ? "Edit the selected task's details and custom fields."
+              : "Create a new task with title, description, status, priority, and optional custom fields."}
+          </Dialog.Description>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
